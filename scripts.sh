@@ -6,7 +6,7 @@ zcat files/sample.vcf.gz | grep -m1 "^#CHROM" | cut -f 10- | tr "\t" "\n"  | wc 
 zcat files/sample.vcf.gz |  grep -c '^[^#]'
 
 #5. How would you extract the chromosome, position, QualByDepth and RMSMappingQuality fields? Save the output to a tab-delimited file
-zcat files/sample.vcf.gz |  grep '^[^#]' | cut -f 1,2,6 >> out_dir/answer5.csv
+bcftools query -f '%CHROM\t%POS\t%QUAL\t%MQ\n' files/sample.vcf.gz > out_dir/answer5.tsv
 
 #6. Extract data that belongs to chromosomes 2,4 and MT
 7. Print out variants that do not belong to chr20:1-30000000
