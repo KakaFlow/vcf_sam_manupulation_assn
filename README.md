@@ -1,10 +1,15 @@
-# vcf_sam_manipulation_assn
+# vcf_sam_manipulation
 
 ## Bash: Manipulation of the VCF and SAM files
 
 ### By : KAKANDE Paul
+### Files provided:
+> - sample.vcf.gz
+> - sample.sam
+> All in the **files** folder. This folder also includes the output of conversion to Binary version and index of **sample.sam**
+> The output files are in the **out_dir** folder
 
-# VCF files.
+# Variant Call Format (VCF) files.
 
 ## 1-2. Structure of VCF file and contents of the header.
 
@@ -126,7 +131,8 @@ Command used:
 `bcftools query -f '%CHROM\t%POS\t%ALT\t%AF\n' files/sample.vcf.gz`
 
 
-# Manipulating SAM files
+# Manipulating Sequence Alignment (SAM) files
+
 ## 1. Describe the format of the file and the data stored
 The Sequence Alignment (SAM) file is a tab delimited text file that stores information about the alignment of reads in a FASTQ file to a reference genome or transcriptome.
 A SAM file format is consists of:
