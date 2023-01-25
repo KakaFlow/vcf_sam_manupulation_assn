@@ -1,9 +1,15 @@
 ## VCF file manupulation
-#3. How many samples are in the file
-zcat files/sample.vcf.gz | grep -m1 "^#CHROM" | cut -f 10- | tr "\t" "\n"  | wc -l
+#1.Structure of vcf file
+bcftools view files/sample.vcf.gz
+
+#2. Header content
+bcftools view -h files/sample.vcf.gz
+
+#3. How many samples are in the file.
+bcftools query -l files/sample.vcf.gz | wc -l
 
 #4. How many variants are in the file
-zcat files/sample.vcf.gz |  grep -c '^[^#]'
+bcftools query -f '%ALT\n' files/sample.vcf.gz | wc -l`
 
 #5. How would you extract the chromosome, position, QualByDepth and RMSMappingQuality fields? Save the output to a tab-delimited file
 bcftools query -f '%CHROM\t%POS\t%QUAL\t%MQ\n' files/sample.vcf.gz > out_dir/answer5.tsv
