@@ -134,7 +134,7 @@ A SAM file format is consists of:
 - Records containing the structured read information one line per record
 
 
-# 2. What does the header section of the file contain
+## 2. What does the header section of the file contain
 Command used:
 `samtools view -H files/sample.sam`.
 
@@ -164,45 +164,44 @@ Command used:
 >- PP- the previous program used before the alignment
 >- ID-the command line argument used to run the program that generated the alignment. 
 
-# 3. How many samples are in the file
+## 3. How many samples are in the file
 Command used:
 `grep -c SM files/sample.sam`
 
 The output is **249** refering to samples.
 
-# 4. How many alignments are in the file
+## 4. How many alignments are in the file
 Command used:
 `awk ' $1 !~ /@/ {print $1}' files/sample.sam | wc -l`
 
 The output is **361428* refering to alignments.
 
-# 5. Get summary statistics for the alignments in the file
+## 5. Get summary statistics for the alignments in the file
 Command used:
 `samtools view -bS files/sample.sam | samtools stats > out_dir/samstats.txt`
 
 The sam file is converted in a Binary Alignment Map (BAM) using the `samtools view -bS files/sample.sam` then the output is piped to `samtools stats` whose output is stored in file **samstats.txt** in the out_dir directory.
 
-# 6. Count the number of fields in the file
+## 6. Count the number of fields in the file
 Command used:
 `grep -v "^@" files/sample.sam | awk '{print NF}'| sort -nu`
 
 The first part removes the header and awk is used to count the number of fields.
 Three values are returned that is **13,17 and 18** as some lines have more or less fields than others.
 
-# 7. Print all lines in the file that have @SQ and sequence name tag beginning with NT_
+## 7. Print all lines in the file that have @SQ and sequence name tag beginning with NT_
 Command used:
 `grep "@SQ.*NT_" files/sample.sam`
 
-# 8. Print all lines in the file that have @RG and LB tag beginning with Solexa
+## 8. Print all lines in the file that have @RG and LB tag beginning with Solexa
 Command used:
 `grep "@RG.*LB:Solexa" files/sample.sam`
 
-# 9. Extract primarily aligned sequences and save them in another file
+## 9. Extract primarily aligned sequences and save them in another file
 
-# 10. Extract alignments that map to chromosomes 1 and 3. Save the output in BAM
-format
+# 10. Extract alignments that map to chromosomes 1 and 3. Save the output in BAM format
 
-11. How would you obtain unmapped reads from the file
-12. How many reads are aligned to chromosome 4
-13. Comment of the second and sixth column of the file
-14. Extract all optional fields of the file and save them in “optional_fields.txt
+## 11. How would you obtain unmapped reads from the file
+## 12. How many reads are aligned to chromosome 4
+## 13. Comment of the second and sixth column of the file
+## 14. Extract all optional fields of the file and save them in “optional_fields.txt
