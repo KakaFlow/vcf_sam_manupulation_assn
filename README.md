@@ -2,7 +2,7 @@
 
 ## Bash: Manupulation of the VCF and SAM files
 
-## By : KAKANDE Paul
+### By : KAKANDE Paul
 
 # VCF files.
 
@@ -51,21 +51,36 @@
 
 Commands used:
 `zcat files/sample.vcf.gz` to view the whole file
-`zcat files/sample.vcf.gz |  grep '^##` to view the header in isolation.
+`zcat files/sample.vcf.gz |  grep '^##'` to view the header in isolation.
+
+Or 
+`bcftools view files/sample.vcf.gz` to view the whole file
+`bcftools view -h files/sample.vcf.gz` to view the header in isolation.
 
 ## 3. Number of Samples in file.
 Command used:
 `zcat files/sample.vcf.gz | grep -m1 "^#CHROM" | cut -f 10- | tr "\t" "\n"  | wc -l`
+
+Or 
+`bcftools query -l files/sample.vcf.gz | wc -l`
+
 The output is **6** indicating six samples are in the file
 
 ## 4. Number of Variants in the file.
 Command used:
 `zcat files/sample.vcf.gz |  grep -c '^[^#]'`
+
+Or 
+`bcftools query -f '%ALT\n' files/sample.vcf.gz | wc -l`
+
 The output is **398246**.
 
 ## 5. Extraction of  the chromosome, position, QualByDepth and RMSMappingQuality fields and save the output to a tab-delimited file.
 Commmand used:
-`zcat files/sample.vcf.gz |zcat files/sample.vcf.gz |  grep '^[^#]' | cut -f 1,2,6,8 | awk 'match($0, /MQ=([0-9]+\.[0-9]+)\;/){ $4=substr($0, RSTART, RLENGTH-1) }1' | awk '{ sub("MQ=","",$4); print }' OFS='\t' > out_dir/answer5.tsv`
+`zcat files/sample.vcf.gz |  grep '^[^#]' | cut -f 1,2,6,8 | awk 'match($0, /MQ=([0-9]+\.[0-9]+)\;/){ $4=substr($0, RSTART, RLENGTH-1) }1' | awk '{ sub("MQ=","",$4); print }' OFS='\t' > out_dir/answer5.tsv`
+
+Or 
+`bcftools query -f '%CHROM\t%POS\t%QUAL\t%MQ\n' files/sample.vcf.gz > out_dir/answers5.tsv`
 
 ## 6. Data belonging to chromosomes 2,4 and MT
 Command used:
@@ -77,8 +92,11 @@ Command used:
 
 ## 8. Variants that belong to SRR13107019
 Command used:
+`bcftools query -f '%ALT\n' -s SRR13107019 files/sample.vcf.gz`
 
 ## 9. Variants with a QuadByDepth above 7
 Command used:
 `zcat files/sample.vcf.gz |  grep '^[^#]' | awk 'match($0, /QD=([0-9]+\.[0-9]+)\;/){ $8=substr($0, RSTART, RLENGTH-1) }1' | awk '{ sub("QD=","",$8); print }' | awk '$8>7'`
 
+Or 
+`bcftools query -f '[%ALT\t%QD\n]' files/sample.vcf.gz | awk '$2>7'`
