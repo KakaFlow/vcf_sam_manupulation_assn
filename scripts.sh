@@ -47,3 +47,36 @@ bcftools query -f '%ALT\t%DP\n' -s SRR13107018 files/sample.vcf.gz
 
 #13. Extract data on the allele frequency of alternate alleles. Combine this data with the chromosome and position of the alternate allele
 bcftools query -f '%CHROM\t%POS\t%ALT\t%AF\n' files/sample.vcf.gz
+
+## SAM file manupulation
+
+#1. Describe the format of the file and the data stored
+
+#2. What does the header section of the file contain
+samtools view -H files/sample.sam
+
+#3. How many samples are in the file
+grep -c SM files/sample.sam
+
+#4. How many alignments are in the file
+awk ' $1 !~ /@/ {print $1}' files/sample.sam | wc -l
+
+#5. Get summary statistics for the alignments in the file
+samtools view -bS files/sample.sam | samtools stats > out_dir/samstats.txt
+
+#6. Count the number of fields in the file
+grep -v "^@" files/sample.sam | awk '{print NF}'| sort -nu
+
+#7. Print all lines in the file that have @SQ and sequence name tag beginning with NT_
+grep "@SQ.*NT_" files/sample.sam
+
+#8. Print all lines in the file that have @RG and LB tag beginning with Solexa
+grep "@RG.*LB:Solexa" files/sample.sam
+
+9. Extract primarily aligned sequences and save them in another file
+10. Extract alignments that map to chromosomes 1 and 3. Save the output in BAM
+format
+11. How would you obtain unmapped reads from the file
+12. How many reads are aligned to chromosome 4
+13. Comment of the second and sixth column of the file
+14. Extract all optional fields of the file and save them in “optional_fields.txt
