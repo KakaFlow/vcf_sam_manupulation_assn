@@ -1,6 +1,6 @@
-# vcf_sam_manupulation_assn
+# vcf_sam_manipulation_assn
 
-## Bash: Manupulation of the VCF and SAM files
+## Bash: Manipulation of the VCF and SAM files
 
 ### By : KAKANDE Paul
 
@@ -124,3 +124,84 @@ Command used:
 ## 13. Allele frequency of alternate alleles extract combined with chromosome postion and alternate allele
 Command used:
 `bcftools query -f '%CHROM\t%POS\t%ALT\t%AF\n' files/sample.vcf.gz`
+
+
+# Manipulating SAM files
+##1. Describe the format of the file and the data stored
+The Sequence Alignment (SAM) file is a tab delimited text file that stores information about the alignment of reads in a FASTQ file to a reference genome or transcriptome.
+A SAM file format is consists of:
+- Header that contains sequence dictionary, read group definitions among others.
+- Records containing the structured read information one line per record
+
+
+#2. What does the header section of the file contain
+Command used:
+`samtools view -H files/sample.sam`.
+
+>The header section contains; 
+>- HD- general information about the alignment file with fields: 
+>-- GO- group ordering 
+>-- SO- sort ordering of the alignments in the file
+>- VN- the version number of the header 
+>- SQ- information about  the reference sequence used for the alignment 
+>- SN- name of the reference sequence
+>- LN- length of the reference sequence.
+
+>The next part of the header contains the :
+>- RG- read groups from the same sample or sequencing run
+>- ID- identifies the read group
+>-  PL-sequencing platform used to generate read groups
+>- PU-specific sequencing platform unit from which the reads were generated
+>- LB- stores the name of the library from which the reads were generated 
+>- SM- name of the sample the reads come from
+>- CN- sequencing center where the reads were generated. 
+
+>Other information contained in the header is BI which is barcode indexing during multiplexing and PE for paired ended reads.
+
+>The bottom of the header contains
+>- PG- the program that generated the alignment
+>- PN-program name and VN- the program version
+>- PP- the previous program used before the alignment
+>- ID-the command line argument used to run the program that generated the alignment. 
+
+#3. How many samples are in the file
+Command used:
+`grep -c SM files/sample.sam`
+
+The output is **249** refering to samples.
+
+#4. How many alignments are in the file
+Command used:
+`awk ' $1 !~ /@/ {print $1}' files/sample.sam | wc -l`
+
+The output is **361428* refering to alignments.
+
+#5. Get summary statistics for the alignments in the file
+Command used:
+`samtools view -bS files/sample.sam | samtools stats > out_dir/samstats.txt`
+
+The sam file is converted in a Binary Alignment Map (BAM) using the `samtools view -bS files/sample.sam` then the output is piped to `samtools stats` whose output is stored in file **samstats.txt** in the out_dir directory.
+
+#6. Count the number of fields in the file
+Command used:
+`grep -v "^@" files/sample.sam | awk '{print NF}'| sort -nu`
+
+The first part removes the header and awk is used to count the number of fields.
+Three values are returned that is **13,17 and 18** as some lines have more or less fields than others.
+
+#7. Print all lines in the file that have @SQ and sequence name tag beginning with NT_
+Command used:
+`grep "@SQ.*NT_" files/sample.sam`
+
+#8. Print all lines in the file that have @RG and LB tag beginning with Solexa
+Command used:
+`grep "@RG.*LB:Solexa" files/sample.sam`
+
+#9. Extract primarily aligned sequences and save them in another file
+
+#10. Extract alignments that map to chromosomes 1 and 3. Save the output in BAM
+format
+11. How would you obtain unmapped reads from the file
+12. How many reads are aligned to chromosome 4
+13. Comment of the second and sixth column of the file
+14. Extract all optional fields of the file and save them in “optional_fields.txt
