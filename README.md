@@ -111,10 +111,11 @@ The number of contigs obtained was **2211**
 These were viewed using `zcat files/sample.vcf.gz |  sed -n '/^[#?][^#]/, $p' | cut -f 8,9`
 
 >The eighth column; the INFO column stores information about the variant itself. It contains information such as the variant's quality (QUAL), read depth (DP), and allele frequency (AF). The format of this column is not fixed, that is different tools may add more fields such as below:
-> -AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=21.13;SOR=0.693
-> -AC=8;AF=0.667;AN=12;BaseQRankSum=1.25;DP=145;ExcessHet=1.3830;FS=0.000;MLEAC=8;MLEAF=0.667;MQ=60.00;MQRankSum=0.00;QD=28.73;ReadPosRankSum=1.34;SOR=0.928 
+> - AC=2;AF=1.00;AN=2;DP=2;ExcessHet=3.0103;FS=0.000;MLEAC=2;MLEAF=1.00;MQ=60.00;QD=21.13;SOR=0.693
+> - AC=8;AF=0.667;AN=12;BaseQRankSum=1.25;DP=145;ExcessHet=1.3830;FS=0.000;MLEAC=8;MLEAF=0.667;MQ=60.00;MQRankSum=0.00;QD=28.73;ReadPosRankSum=1.34;SOR=0.928 
+
 >The ninth column; FORMAT column contains information about the genotype of the sample(s) at a specific variant location. It contains information such as the genotype (GT), read depth (DP), and allelic depth (AD) for each sample. The format of this column is fixed and defined in the VCF header such as:
-> -GT:AD:DP:GQ:PL 
+> - GT:AD:DP:GQ:PL 
 
 ## 12. Read depth variants for sample SRR13107018
 Command used:
