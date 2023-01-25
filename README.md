@@ -218,7 +218,7 @@ Command used:
 Command used: 
 `samtools view -F 4 files/sample.sam  > aligned_reads`
 
-# 10. Extract alignments that map to chromosomes 1 and 3. Save the output in BAM format
+## 10. Extract alignments that map to chromosomes 1 and 3. Save the output in BAM format
 Command used:
 `samtools view -b files/sample_sorted.bam "1:3" > out_dir/align_1_3.bam`
 
@@ -279,3 +279,5 @@ Li H, Handsaker B, Wysoker A, Fennell T, Ruan J, Homer N, Marth G, Abecasis G, D
 [SAMtools](https://hcc.unl.edu/docs/applications/app_specific/bioinformatics_tools/data_manipulation_tools/samtools/running_samtools_commands/)
 
 [SAM Format specification](https://samtools.github.io/hts-specs/SAMv1.pdf)
+
+[BCFtools](https://samtools.github.io/bcftools/bcftools.html)
