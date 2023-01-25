@@ -1,4 +1,5 @@
-## VCF file manupulation
+## VCF file manipulation
+
 #1.Structure of vcf file
 zcat files/sample.vcf.gz
 #Or
@@ -11,6 +12,7 @@ bcftools view -h files/sample.vcf.gz
 
 #3. How many samples are in the file.
 zcat files/sample.vcf.gz | grep -m1 "^#CHROM" | cut -f 10- | tr "\t" "\n"  | wc -l
+#Or
 bcftools query -l files/sample.vcf.gz | wc -l
 
 #4. How many variants are in the file
@@ -20,6 +22,7 @@ bcftools query -f '%ALT\n' files/sample.vcf.gz | wc -l`
 
 #5. How would you extract the chromosome, position, QualByDepth and RMSMappingQuality fields? Save the output to a tab-delimited file
 zcat files/sample.vcf.gz |  grep '^[^#]' | cut -f 1,2,6,8 | awk 'match($0, /MQ=([0-9]+\.[0-9]+)\;/){ $4=substr($0, RSTART, RLENGTH-1) }1' | awk '{ sub("MQ=","",$4); print }' OFS='\t' > out_dir/answer5.tsv`
+#Or
 bcftools query -f '%CHROM\t%POS\t%QUAL\t%MQ\n' files/sample.vcf.gz > out_dir/answer5.tsv
 
 #6. Extract data that belongs to chromosomes 2,4 and MT
@@ -48,7 +51,7 @@ bcftools query -f '%ALT\t%DP\n' -s SRR13107018 files/sample.vcf.gz
 #13. Extract data on the allele frequency of alternate alleles. Combine this data with the chromosome and position of the alternate allele
 bcftools query -f '%CHROM\t%POS\t%ALT\t%AF\n' files/sample.vcf.gz
 
-## SAM file manupulation
+## SAM file manipulation
 
 #1. Describe the format of the file and the data stored
 ## Creating required bam files
@@ -94,5 +97,3 @@ samtools view -b files/sample_sorted.bam "4" > out_dir/align_4.bam
 
 #14. Extract all optional fields of the file and save them in “optional_fields.txt
 awk '{for(i=11;i<=NF;i++) print $i}' files/sample.sam > out_dir/optional_fields.txt
-
-
