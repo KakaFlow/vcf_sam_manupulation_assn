@@ -36,8 +36,14 @@ zcat files/sample.vcf.gz |  grep '^[^#]' | awk 'match($0, /QD=([0-9]+\.[0-9]+)\;
 # Or
 bcftools query -f '[%ALT\t%QD\n]' files/sample.vcf.gz | awk '$2>7'
 
-10. How many contigs are referred to in the file. Check the header section
-11. Comment on the eighth and ninth columns of the file
-12. Extract data on the read depth of called variants for sample SRR13107018
-13. Extract data on the allele frequency of alternate alleles. Combine this data with the
-chromosome and position of the alternate allele
+#10. How many contigs are referred to in the file. Check the header section
+zcat files/sample.vcf.gz | grep -c '^##contig'
+
+#11. Comment on the eighth and ninth columns of the file
+zcat files/sample.vcf.gz |  sed -n '/^[#?][^#]/, $p' | cut -f 8,9
+
+#12. Extract data on the read depth of called variants for sample SRR13107018
+bcftools query -f '%ALT\t%DP\n' -s SRR13107018 files/sample.vcf.gz
+
+#13. Extract data on the allele frequency of alternate alleles. Combine this data with the chromosome and position of the alternate allele
+bcftools query -f '%CHROM\t%POS\t%ALT\t%AF\n' files/sample.vcf.gz
