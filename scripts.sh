@@ -51,6 +51,10 @@ bcftools query -f '%CHROM\t%POS\t%ALT\t%AF\n' files/sample.vcf.gz
 ## SAM file manupulation
 
 #1. Describe the format of the file and the data stored
+## Creating required bam files
+samtools view -bS files/sample.sam > files/sample.bam
+samtools sort files/sample.bam > files/sample_sorted.bam
+samtools index files/sample_sorted.bam
 
 #2. What does the header section of the file contain
 samtools view -H files/sample.sam
@@ -73,10 +77,22 @@ grep "@SQ.*NT_" files/sample.sam
 #8. Print all lines in the file that have @RG and LB tag beginning with Solexa
 grep "@RG.*LB:Solexa" files/sample.sam
 
-9. Extract primarily aligned sequences and save them in another file
-10. Extract alignments that map to chromosomes 1 and 3. Save the output in BAM
-format
-11. How would you obtain unmapped reads from the file
-12. How many reads are aligned to chromosome 4
-13. Comment of the second and sixth column of the file
-14. Extract all optional fields of the file and save them in “optional_fields.txt
+#9. Extract primarily aligned sequences and save them in another file
+samtools view -F 4 files/sample.sam  > aligned_reads
+
+#10. Extract alignments that map to chromosomes 1 and 3. Save the output in BAM format
+samtools view -b files/sample_sorted.bam "1:3" > out_dir/align_1_3.bam
+
+#11. How would you obtain unmapped reads from the file
+samtools view -f 4 files/sample.bam
+
+#12. How many reads are aligned to chromosome 4
+samtools view -b files/sample_sorted.bam "4" > out_dir/align_4.bam
+
+#13. Comment of the second and sixth column of the file
+## Comments in README.md file.
+
+#14. Extract all optional fields of the file and save them in “optional_fields.txt
+awk '{for(i=11;i<=NF;i++) print $i}' files/sample.sam > out_dir/optional_fields.txt
+
+

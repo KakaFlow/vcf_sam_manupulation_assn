@@ -133,6 +133,15 @@ A SAM file format is consists of:
 - Header that contains sequence dictionary, read group definitions among others.
 - Records containing the structured read information one line per record
 
+The lines in the header section start with character ‘@’, and lines in the alignment section do not.
+
+> Creating bam file from sam file for use in downstrean questions.
+> `samtools view -bS files/sample.sam > files/sample.bam`
+> Sorting the created bam file
+> `samtools sort files/sample.bam > files/sample_sorted.bam`
+> Indexing the sorted bam file
+> `samtools index files/sample_sorted.bam`
+> The bam file and other respective files are saved in the files folder.
 
 ## 2. What does the header section of the file contain
 Command used:
@@ -174,13 +183,15 @@ The output is **249** refering to samples.
 Command used:
 `awk ' $1 !~ /@/ {print $1}' files/sample.sam | wc -l`
 
-The output is **361428* refering to alignments.
+Output: **36142** indicating the number of alignments in the file.
 
 ## 5. Get summary statistics for the alignments in the file
 Command used:
 `samtools view -bS files/sample.sam | samtools stats > out_dir/samstats.txt`
 
 The sam file is converted in a Binary Alignment Map (BAM) using the `samtools view -bS files/sample.sam` then the output is piped to `samtools stats` whose output is stored in file **samstats.txt** in the out_dir directory.
+
+`samtools flagstat files/sample.sam` can also be used to show stat about the file.
 
 ## 6. Count the number of fields in the file
 Command used:
@@ -198,10 +209,67 @@ Command used:
 `grep "@RG.*LB:Solexa" files/sample.sam`
 
 ## 9. Extract primarily aligned sequences and save them in another file
+Command used: 
+`samtools view -F 4 files/sample.sam  > aligned_reads`
 
 # 10. Extract alignments that map to chromosomes 1 and 3. Save the output in BAM format
+Command used:
+`samtools view -b files/sample_sorted.bam "1:3" > out_dir/align_1_3.bam`
+
+No alignments map to chromosomes 1 and 3
 
 ## 11. How would you obtain unmapped reads from the file
+Command used:
+`samtools view -f 4 files/sample.bam`
+
 ## 12. How many reads are aligned to chromosome 4
+Command used:
+`samtools view -b files/sample_sorted.bam "4" > out_dir/align_4.bam`
+
+No reads were found aligned to chromosome 4 on running the code above.
+
 ## 13. Comment of the second and sixth column of the file
+> The second column contains the FLAG which is a combination of bitwise FLAGs.
+> Explanation of the bits:
+> For each read/contig in a SAM file, it is required that one and only one line associated with the read satisfies ‘FLAG & 0x900 == 0’. This line is called the primary line of the read.
+> - Bit 0x100 marks the alignment not to be used in certain analyses when the tools in use are aware of this bit. It is typically used to flag alternative mappings when multiple mappings are presented in a SAM.
+> - Bit 0x800 indicates that the corresponding alignment line is part of a chimeric alignment. A line flagged with 0x800 is called as a supplementary line.
+> - Bit 0x4 is the only reliable place to tell whether the read is unmapped. If 0x4 is set, no assumptions can be made about RNAME, POS, CIGAR, MAPQ, and bits 0x2, 0x100, and 0x800.
+> - Bit 0x10 indicates whether SEQ has been reverse complemented and QUAL reversed. When bit 0x4 is unset, this corresponds to the strand to which the segment has been mapped: bit 0x10 unset indicates the forward strand, while set indicates the reverse strand. When 0x4 is set, this indicates whether the unmapped read is stored in its original orientation as it came off the sequencing machine.
+> - Bits 0x40 and 0x80 reflect the read ordering within each template inherent in the sequencing technology used.13 If 0x40 and 0x80 are both set, the read is part of a linear template, but it is neither the first nor the last read. If both 0x40 and 0x80 are unset, the index of the read in the template is unknown. This may happen for a non-linear template or when this information is lost during data processing.
+>  If 0x1 is unset, no assumptions can be made about 0x2, 0x8, 0x20, 0x40 and 0x80.
+>  Bits that are not listed in the table are reserved for future use. They should not be set when writing and should be ignored on reading by current software
+
+> The sixth column contains the CIGAR string, all the reads matched to the reference as there were no mismatches or deletions, or insertions. 
+> The CIGAR operations are as below (set ‘*’ if unavailable):
+> Op	BAM	Description						 Consumes query	 Consumes reference
+> M 	0 	alignment match (can be a sequence match or mismatch)	 yes		 yes
+> I 	1 	insertion to the reference				 yes		 no
+> D 	2 	deletion from the reference				 no		 yes
+> N 	3 	skipped region from the reference			 no		 yes
+> S 	4 	soft clipping (clipped sequences present in SEQ)	 yes		 no
+> H 	5 	hard clipping (clipped sequences NOT present in SEQ)	 no		 no
+> P 	6 	padding (silent deletion from padded reference)		 no		 no
+> = 	7 	sequence match						 yes		 yes
+> X 	8 	sequence mismatch					 yes		 yes
+
+>  “Consumes query” and “consumes reference” indicate whether the CIGAR operation causes the alignment to step along the query sequence and the reference sequence respectively.
+>  H can only be present as the first and/or last operation.
+>  S may only have H operations between them and the ends of the CIGAR string.
+>  For mRNA-to-genome alignment, an N operation represents an intron. For other types of alignments, the interpretation of N is not defined.
+>Sum of lengths of the M/I/S/=/X operations shall equal the length of SEQ.
+
 ## 14. Extract all optional fields of the file and save them in “optional_fields.txt
+Command used:
+`awk '{for(i=11;i<=NF;i++) print $i}' files/sample.sam > out_dir/optional_fields.txt`
+
+## References
+Li H, Handsaker B, Wysoker A, Fennell T, Ruan J, Homer N, Marth G, Abecasis G, Durbin R; 1000 Genome Project Data Processing Subgroup. The Sequence Alignment/Map format and SAMtools. Bioinformatics. 2009 Aug 15;25(16):2078-9. doi: 10.1093/bioinformatics/btp352. Epub 2009 Jun 8. PMID: 19505943; PMCID: PMC2723002.
+
+[Variant Call Format](https://gatk.broadinstitute.org/hc/en-us/articles/360035531692-VCF-Variant-Call-Format)
+
+[Sequence Alignment Map](https://gatk.broadinstitute.org/hc/en-us/articles/360035890791-SAM-or-BAM-or-CRAM-Mapped-sequence-data-formats)
+
+[SAMtools](https://hcc.unl.edu/docs/applications/app_specific/bioinformatics_tools/data_manipulation_tools/samtools/running_samtools_commands/)
+
+[SAM Format specification](https://samtools.github.io/hts-specs/SAMv1.pdf)
