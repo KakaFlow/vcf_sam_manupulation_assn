@@ -69,5 +69,16 @@ Commmand used:
 
 ## 6. Data belonging to chromosomes 2,4 and MT
 Command used:
+`zcat files/sample.vcf.gz | awk -F "\t" '$1~/^(2|4|MT)$/{print $0}'`
 
+## 7. Variants that do not belong to chr20:1-30000000
+Command used:
+`zcat files/sample.vcf.gz |  grep '^[^#]' | awk '!($1 == 20 && $2 >= 1 && $2 <= 30000000)'`
 
+## 8. Variants that belong to SRR13107019
+Command used:
+`bcftools query -f '%ALT\n' -s SRR13107019 files/sample.vcf.gz`
+
+## 9. Variants with a QuadByDepth above 7
+Command used:
+`bcftools query -f '[%ALT\t%QD\n]' files/sample.vcf.gz | awk '$2>7'`
