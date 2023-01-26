@@ -230,7 +230,7 @@ Command used:
 
 ## 12. How many reads are aligned to chromosome 4
 Command used:
-`samtools view -b files/sample_sorted.bam "4" > out_dir/align_4.bam`
+`grep -c "^4\t" files/sample.sam`
 
 No reads were found aligned to chromosome 4 on running the code above.
 

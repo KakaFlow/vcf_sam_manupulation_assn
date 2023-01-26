@@ -90,7 +90,7 @@ samtools view -b files/sample_sorted.bam "1:3" > out_dir/align_1_3.bam
 samtools view -f 4 files/sample.bam
 
 #12. How many reads are aligned to chromosome 4
-samtools view -b files/sample_sorted.bam "4" > out_dir/align_4.bam
+grep -c "^4\t" sample.sam
 
 #13. Comment of the second and sixth column of the file
 ## Comments in README.md file.
