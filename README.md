@@ -248,15 +248,25 @@ No reads were found aligned to chromosome 4 on running the code above.
 
 > The sixth column contains the CIGAR string, all the reads matched to the reference as there were no mismatches or deletions, or insertions. 
 > The CIGAR operations are as below (set ‘*’ if unavailable):
+
 > Op	BAM	Description						 Consumes query	 Consumes reference
+
 > M 	0 	alignment match (can be a sequence match or mismatch)	 yes		 yes
+
 > I 	1 	insertion to the reference				 yes		 no
+
 > D 	2 	deletion from the reference				 no		 yes
+
 > N 	3 	skipped region from the reference			 no		 yes
+
 > S 	4 	soft clipping (clipped sequences present in SEQ)	 yes		 no
+
 > H 	5 	hard clipping (clipped sequences NOT present in SEQ)	 no		 no
+
 > P 	6 	padding (silent deletion from padded reference)		 no		 no
+
 > = 	7 	sequence match						 yes		 yes
+
 > X 	8 	sequence mismatch					 yes		 yes
 
 >  “Consumes query” and “consumes reference” indicate whether the CIGAR operation causes the alignment to step along the query sequence and the reference sequence respectively.
